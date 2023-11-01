@@ -1,6 +1,10 @@
 using ApiApplication.Database;
 using ApiApplication.Database.Repositories;
 using ApiApplication.Database.Repositories.Abstractions;
+using ApiApplication.Models;
+using ApiApplication.Providers;
+using ApiApplication.Services;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +12,8 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+using System;
 
 namespace ApiApplication
 {
@@ -27,13 +33,24 @@ namespace ApiApplication
             services.AddTransient<ITicketsRepository, TicketsRepository>();
             services.AddTransient<IAuditoriumsRepository, AuditoriumsRepository>();
 
-            services.AddDbContext<CinemaContext>(options =>
+			services.AddTransient<ShowtimesService>();
+			services.AddTransient<ExternalMovieService>();
+
+			services.AddHttpClient("ExternalMovies", config =>
+			{
+				config.BaseAddress = new Uri(Configuration["Services:ExternalMovies"]);
+			});
+
+			services.AddDbContext<CinemaContext>(options =>
             {
                 options.UseInMemoryDatabase("CinemaDb")
                     .EnableSensitiveDataLogging()
                     .ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning));
             });
-            services.AddControllers();
+
+            services.AddAutoMapper(typeof(AutoMapping));            
+
+			services.AddControllers();
 
             services.AddHttpClient();
         }

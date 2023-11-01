@@ -1,12 +1,30 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ApiApplication.Providers;
+
+using Microsoft.AspNetCore.Mvc;
+
+using System.Threading.Tasks;
 
 namespace ApiApplication.Controllers
 {
-    public class ShowtimesController : Controller
+    [ApiController]
+    public class ShowTimesController : ControllerBase
     {
-        public IActionResult Index()
+        private readonly ShowtimesService _showTimesService;
+        public ShowTimesController(ShowtimesService showTimesService)
         {
-            return View();
+            _showTimesService = showTimesService;
+        }
+
+        [HttpPost]
+        [Route("showtime")]
+        public async Task<IActionResult> CreateShowtimeAsync(string externalMovieId)
+        {
+            var createdShowtime = await _showTimesService.CreateShowtimeWithMovieAsync(externalMovieId);
+
+            if (createdShowtime == null)
+                return BadRequest("Failed to create showtime.");
+
+            return Ok(createdShowtime);
         }
     }
 }
