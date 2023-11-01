@@ -1,6 +1,7 @@
 using ApiApplication.Database;
 using ApiApplication.Database.Repositories;
 using ApiApplication.Database.Repositories.Abstractions;
+using ApiApplication.Middlewares;
 using ApiApplication.Models;
 using ApiApplication.Providers;
 using ApiApplication.Services;
@@ -69,7 +70,9 @@ namespace ApiApplication
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+			app.UseMiddleware<ExecutionTimeLoggingMiddleware>();
+
+			app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
