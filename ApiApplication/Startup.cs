@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using Polly;
 using System;
 
 namespace ApiApplication
@@ -41,7 +41,7 @@ namespace ApiApplication
 			services.AddHttpClient("ExternalMovies", config =>
 			{
 				config.BaseAddress = new Uri(Configuration["Services:ExternalMovies:http"]);
-			});
+			}).AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(5, _ => TimeSpan.FromMilliseconds(500)));
 
 			services.AddDbContext<CinemaContext>(options =>
 			{
