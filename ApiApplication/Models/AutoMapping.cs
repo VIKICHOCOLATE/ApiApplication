@@ -11,7 +11,10 @@ namespace ApiApplication.Models
         {
             CreateMap<MovieEntity, MovieDTO>();
 
-            CreateMap<ShowtimeEntity, ShowtimeDTO>()
+			CreateMap<ExternalMovieDTO, MovieEntity>()
+			   .ForMember(dest => dest.Stars, opt => opt.MapFrom(src => src.Crew));
+
+			CreateMap<ShowtimeEntity, ShowtimeDTO>()
             .ForMember(dest => dest.MovieId, opt => opt.MapFrom(src => src.Movie.Id))
             .ForMember(dest => dest.MovieTitle, opt => opt.MapFrom(src => src.Movie.Title));
         }

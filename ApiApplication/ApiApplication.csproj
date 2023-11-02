@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
-    <Protobuf Include="movies.proto" GrpcServices="Client" />
+    <Protobuf Include="movies.proto" GrpcServices="Client;Server" />
   </ItemGroup>
 
 </Project>

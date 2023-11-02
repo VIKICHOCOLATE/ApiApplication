@@ -18,66 +18,69 @@ using System;
 
 namespace ApiApplication
 {
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+	public class Startup
+	{
+		public Startup(IConfiguration configuration)
+		{
+			Configuration = configuration;
+		}
 
-        public IConfiguration Configuration { get; }
+		public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddTransient<IShowtimesRepository, ShowtimesRepository>();
-            services.AddTransient<ITicketsRepository, TicketsRepository>();
-            services.AddTransient<IAuditoriumsRepository, AuditoriumsRepository>();
+		// This method gets called by the runtime. Use this method to add services to the container.
+		public void ConfigureServices(IServiceCollection services)
+		{
+			services.AddTransient<IShowtimesRepository, ShowtimesRepository>();
+			services.AddTransient<ITicketsRepository, TicketsRepository>();
+			services.AddTransient<IAuditoriumsRepository, AuditoriumsRepository>();
 
 			services.AddTransient<ShowtimesService>();
 			services.AddTransient<ExternalMovieService>();
 
 			services.AddHttpClient("ExternalMovies", config =>
 			{
-				config.BaseAddress = new Uri(Configuration["Services:ExternalMovies"]);
+				config.BaseAddress = new Uri(Configuration["Services:ExternalMovies:IpAddress"]);
 			});
 
 			services.AddDbContext<CinemaContext>(options =>
-            {
-                options.UseInMemoryDatabase("CinemaDb")
-                    .EnableSensitiveDataLogging()
-                    .ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning));
-            });
+			{
+				options.UseInMemoryDatabase("CinemaDb")
+					.EnableSensitiveDataLogging()
+					.ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+			});
 
-            services.AddAutoMapper(typeof(AutoMapping));            
+			services.AddAutoMapper(typeof(AutoMapping));
 
 			services.AddControllers();
 
-            services.AddHttpClient();
-        }
+			services.AddHttpClient();
+			services.AddGrpc();
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+		}
 
-            app.UseHttpsRedirection();
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		{
+			if (env.IsDevelopment())
+			{
+				app.UseDeveloperExceptionPage();
+			}
 
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
+			app.UseHttpsRedirection();
+
+			app.UseRouting();
+			app.UseAuthentication();
+			app.UseAuthorization();
 
 			app.UseMiddleware<ExecutionTimeLoggingMiddleware>();
 
 			app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+			{
+				endpoints.MapGrpcService<MoviesApiService>();
+				endpoints.MapControllers();
+			});
 
-            SampleData.Initialize(app);
-        }      
-    }
+			SampleData.Initialize(app);
+		}
+	}
 }

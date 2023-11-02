@@ -26,7 +26,7 @@ namespace ApiApplication.Database
                         SessionDate = new DateTime(2023, 1, 1),
                         Movie = new MovieEntity
                         {
-                            Id = 1,
+                            Id = "1",
                             Title = "Inception",
                             ImdbId = "tt1375666",
                             ReleaseDate = new DateTime(2010, 01, 14),

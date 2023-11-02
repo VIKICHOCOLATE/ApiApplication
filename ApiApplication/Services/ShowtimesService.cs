@@ -40,7 +40,7 @@ namespace ApiApplication.Providers
 				throw new InvalidOperationException("Could not fetch movie data.");
 			}
 
-			var movieEntity = _mapper.Map<MovieEntity>(movieData);			
+			var movieEntity = _mapper.Map<MovieEntity>(movieData);
 			var showtimeEntity = GenerateShowtimeEntity(movieEntity);
 			var createdShowtime = await _showtimesRepository.CreateShowtime(showtimeEntity, cancellationToken);
 

@@ -1,6 +1,6 @@
 ﻿using ApiApplication.Interfaces;
 using ApiApplication.Models.DTO;
-
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Net.Http;
 using System.Text.Json;
@@ -12,11 +12,12 @@ namespace ApiApplication.Services
 	{
         private readonly IHttpClientFactory _httpClientFactory;
 		private const string BasePath = "v1/movies/";
+		private string _apiKey;
 
-
-		public ExternalMovieService(IHttpClientFactory httpClientFactory)
+		public ExternalMovieService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
 			_httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
+			_apiKey = configuration["Services:ExternalMovies:ApiKey"];
 		}
 
         public async Task<ExternalMovieDTO> FetchMovieByIdAsync(string movieId)
@@ -24,6 +25,8 @@ namespace ApiApplication.Services
 			try
 			{
 				var client = _httpClientFactory.CreateClient("ExternalMovies");
+				client.DefaultRequestHeaders.Add("X-Apikey", _apiKey);
+
 				var response = await client.GetAsync($"{BasePath}{movieId}");
 
 				if (!response.IsSuccessStatusCode)
