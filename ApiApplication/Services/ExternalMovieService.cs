@@ -48,7 +48,6 @@ namespace ApiApplication.Services
 				// Log the exception
 				return null;
 			}
-			
         }
     }
 }

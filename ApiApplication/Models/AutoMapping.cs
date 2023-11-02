@@ -9,8 +9,6 @@ namespace ApiApplication.Models
     {
         public AutoMapping()
         {
-            CreateMap<MovieEntity, MovieDTO>();
-
 			CreateMap<ExternalMovieDTO, MovieEntity>()
 			   .ForMember(dest => dest.Stars, opt => opt.MapFrom(src => src.Crew));
 
