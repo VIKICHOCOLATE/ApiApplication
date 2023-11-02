@@ -49,17 +49,25 @@ namespace ApiApplication.Providers
 
 		private ShowtimeEntity GenerateShowtimeEntity(MovieEntity movieEntity)
 		{
-			Random random = new Random();
-			int id = random.Next();
-
 			return new ShowtimeEntity()
 			{
-				Id = id,
-				AuditoriumId = 1, // Consider making this configurable
+				Id = GetRandomInt(),
+				AuditoriumId = GetRandomInt(),
 				Movie = movieEntity,
 				SessionDate = DateTime.Now,
-				Tickets = new List<TicketEntity>() { new TicketEntity() }
+				Tickets = GetTickets()
 			};
+		}
+
+		private int GetRandomInt()
+		{
+			Random random = new Random();
+			return random.Next();
+		}
+
+		private List<TicketEntity> GetTickets()
+		{
+			return new List<TicketEntity>() { new TicketEntity() };
 		}
 	}
 }
