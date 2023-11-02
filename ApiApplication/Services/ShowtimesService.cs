@@ -4,7 +4,7 @@ using ApiApplication.Interfaces;
 using ApiApplication.Models.DTO;
 using ApiApplication.Services;
 using AutoMapper;
-
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -19,11 +19,17 @@ namespace ApiApplication.Providers
 		private readonly IExternalMovieService _externalMovieService;
 		private readonly IMapper _mapper;
 
-		public ShowtimesService(IShowtimesRepository showtimesRepository, ExternalMovieService externalMovieService, IMapper mapper)
+		private readonly ILogger<ShowtimesService> _logger;
+
+		public ShowtimesService(IShowtimesRepository showtimesRepository, 
+								IExternalMovieService externalMovieService, 
+								IMapper mapper, 
+								ILogger<ShowtimesService> logger)
 		{
 			_showtimesRepository = showtimesRepository ?? throw new ArgumentNullException(nameof(showtimesRepository));
 			_externalMovieService = externalMovieService ?? throw new ArgumentNullException(nameof(externalMovieService));
 			_mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
 
 		public async Task<IEnumerable<ShowtimeDTO>> GetAllShowTimesAsync(Expression<Func<ShowtimeEntity, bool>> filter = null, CancellationToken cancel = default)
@@ -32,19 +38,28 @@ namespace ApiApplication.Providers
 			return _mapper.Map<IEnumerable<ShowtimeDTO>>(showTimes);
         }
 
-		public async Task<ShowtimeDTO> CreateShowtimeWithMovieAsync(string externalMovieId, CancellationToken cancellationToken = default)
+		public async Task<(bool IsSuccess, ShowtimeDTO ShowTime, string ErrorMessage)> CreateShowtimeWithMovieAsync(string externalMovieId, CancellationToken cancellationToken = default)
 		{
-			var movieData = await _externalMovieService.FetchMovieByIdAsync(externalMovieId);
-			if (movieData == null)
+			try
 			{
-				throw new InvalidOperationException("Could not fetch movie data.");
+				var result = await _externalMovieService.FetchMovieByIdAsync(externalMovieId);
+				if (result.IsSuccess)
+				{
+					var movieEntity = _mapper.Map<MovieEntity>(result.Movie);
+					var showtimeEntity = GenerateShowtimeEntity(movieEntity);
+
+					var createdShowtime = await _showtimesRepository.CreateShowtime(showtimeEntity, cancellationToken);
+					var createdShowtimeResult = _mapper.Map<ShowtimeDTO>(createdShowtime);
+					return (true, createdShowtimeResult, null);
+				}
+				return (false, null, "Movie not found");
+				
 			}
-
-			var movieEntity = _mapper.Map<MovieEntity>(movieData);
-			var showtimeEntity = GenerateShowtimeEntity(movieEntity);
-			var createdShowtime = await _showtimesRepository.CreateShowtime(showtimeEntity, cancellationToken);
-
-			return _mapper.Map<ShowtimeDTO>(createdShowtime);
+			catch (Exception ex)
+			{
+				_logger?.LogError(ex.ToString());
+				return (false, null, ex.Message);
+			}
 		}
 
 		private ShowtimeEntity GenerateShowtimeEntity(MovieEntity movieEntity)
@@ -54,7 +69,7 @@ namespace ApiApplication.Providers
 				Id = GetRandomInt(),
 				AuditoriumId = GetRandomInt(),
 				Movie = movieEntity,
-				SessionDate = DateTime.Now,
+				SessionDate = DateTime.UtcNow,
 				Tickets = GetTickets()
 			};
 		}

@@ -1,6 +1,9 @@
 ﻿using ApiApplication.Interfaces;
 using ApiApplication.Models.DTO;
+
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+
 using System;
 using System.Net.Http;
 using System.Text.Json;
@@ -11,42 +14,47 @@ namespace ApiApplication.Services
     public class ExternalMovieService : IExternalMovieService
 	{
         private readonly IHttpClientFactory _httpClientFactory;
-		private const string BasePath = "v1/movies/";
-		private string _apiKey;
+		private readonly ILogger<ExternalMovieService> _logger;
+		private readonly string _apiKey;
 
-		public ExternalMovieService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+		private const string BasePath = "v1/movies/";
+		private static readonly string ApiKeyConfigurationPath = "Services:ExternalMovies:ApiKey";
+		private static readonly string ApiKeyHeaderName = "X-Apikey";
+
+		public ExternalMovieService(IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<ExternalMovieService> logger)
         {
 			_httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
-			_apiKey = configuration["Services:ExternalMovies:ApiKey"];
+			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
+			_apiKey = configuration[ApiKeyConfigurationPath];
 		}
 
-        public async Task<ExternalMovieDTO> FetchMovieByIdAsync(string movieId)
+        public async Task<(bool IsSuccess, ExternalMovieDTO Movie, string ErrorMessage)> FetchMovieByIdAsync(string movieId)
         {
 			try
 			{
-				var client = _httpClientFactory.CreateClient("ExternalMovies");
-				client.DefaultRequestHeaders.Add("X-Apikey", _apiKey);
+				using var client = _httpClientFactory.CreateClient("ExternalMovies");
+				client.DefaultRequestHeaders.Add(ApiKeyHeaderName, _apiKey);
 
 				var response = await client.GetAsync($"{BasePath}{movieId}");
 
-				if (!response.IsSuccessStatusCode)
+				if (response.IsSuccessStatusCode)
 				{
-					// Log or handle based on status code
-					return null;
+					var content = await response.Content.ReadAsStringAsync();
+					var options = new JsonSerializerOptions
+					{
+						PropertyNameCaseInsensitive = true
+					};
+					var result = JsonSerializer.Deserialize<ExternalMovieDTO>(content, options);
+
+					return (true, result, null);
 				}
-
-				var content = await response.Content.ReadAsStringAsync();
-				var options = new JsonSerializerOptions
-				{
-					PropertyNameCaseInsensitive = true
-				};
-
-				return JsonSerializer.Deserialize<ExternalMovieDTO>(content, options);
+				return (false, null, response.ReasonPhrase);				
 			}
 			catch (Exception ex)
 			{
-				// Log the exception
-				return null;
+				_logger?.LogError(ex.ToString());
+				return (false, null, ex.Message);
 			}
         }
     }

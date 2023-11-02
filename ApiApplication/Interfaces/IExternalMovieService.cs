@@ -5,6 +5,6 @@ namespace ApiApplication.Interfaces
 {
 	public interface IExternalMovieService
 	{
-		Task<ExternalMovieDTO> FetchMovieByIdAsync(string movieId);
+		Task<(bool IsSuccess, ExternalMovieDTO Movie, string ErrorMessage)> FetchMovieByIdAsync(string movieId);
 	}
 }

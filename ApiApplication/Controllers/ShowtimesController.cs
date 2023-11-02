@@ -1,30 +1,39 @@
 ﻿using ApiApplication.Providers;
 
 using Microsoft.AspNetCore.Mvc;
-
+using System;
 using System.Threading.Tasks;
 
 namespace ApiApplication.Controllers
 {
     [ApiController]
-    public class ShowTimesController : ControllerBase
+	[Route("api/[controller]")]
+	public class ShowTimesController : ControllerBase
     {
         private readonly ShowtimesService _showTimesService;
         public ShowTimesController(ShowtimesService showTimesService)
         {
-            _showTimesService = showTimesService;
-        }
+			_showTimesService = showTimesService ?? throw new ArgumentNullException(nameof(showTimesService));
+		}
 
-        [HttpPost]
+		/// <summary>
+		/// Creates a showtime for a movie given its external ID.
+		/// </summary>
+		/// <param name="externalMovieId">The external ID of the movie.</param>
+		/// <returns>The created showtime or an error message.</returns>
+		[HttpPost]
         [Route("showtime")]
-        public async Task<IActionResult> CreateShowtimeAsync(string externalMovieId)
+        public async Task<IActionResult> CreateShowtimeAsync([FromBody] string externalMovieId)
         {
-            var createdShowtime = await _showTimesService.CreateShowtimeWithMovieAsync(externalMovieId);
+			if (string.IsNullOrWhiteSpace(externalMovieId))
+				return BadRequest("External movie ID cannot be empty or null.");
 
-            if (createdShowtime == null)
-                return BadRequest("Failed to create showtime.");
+			var result = await _showTimesService.CreateShowtimeWithMovieAsync(externalMovieId);
 
-            return Ok(createdShowtime);
+			if (result.IsSuccess)
+				return Ok(result.ShowTime);
+
+            return BadRequest(result.ErrorMessage);
         }
     }
 }

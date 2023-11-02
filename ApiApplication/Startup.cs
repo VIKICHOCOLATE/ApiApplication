@@ -39,7 +39,7 @@ namespace ApiApplication
 
 			services.AddHttpClient("ExternalMovies", config =>
 			{
-				config.BaseAddress = new Uri(Configuration["Services:ExternalMovies:IpAddress"]);
+				config.BaseAddress = new Uri(Configuration["Services:ExternalMovies:http"]);
 			});
 
 			services.AddDbContext<CinemaContext>(options =>
