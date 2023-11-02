@@ -1,2 +1,8 @@
 Please add the cURLs of your tests here:
 
+curl --location 'https://localhost:7629/api/showtimes' \
+--header 'Content-Type: application/json' \
+--data '"ID-test1"
+
+'
+

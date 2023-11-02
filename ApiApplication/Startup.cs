@@ -1,6 +1,7 @@
 using ApiApplication.Database;
 using ApiApplication.Database.Repositories;
 using ApiApplication.Database.Repositories.Abstractions;
+using ApiApplication.Interfaces;
 using ApiApplication.Middlewares;
 using ApiApplication.Models;
 using ApiApplication.Providers;
@@ -34,8 +35,8 @@ namespace ApiApplication
 			services.AddTransient<ITicketsRepository, TicketsRepository>();
 			services.AddTransient<IAuditoriumsRepository, AuditoriumsRepository>();
 
-			services.AddTransient<ShowtimesService>();
-			services.AddTransient<ExternalMovieService>();
+			services.AddTransient<IShowtimesService, ShowtimesService>();
+			services.AddTransient<IExternalMovieService, ExternalMovieService>();
 
 			services.AddHttpClient("ExternalMovies", config =>
 			{

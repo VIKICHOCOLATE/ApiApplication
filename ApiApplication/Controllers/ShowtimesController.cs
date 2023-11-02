@@ -1,4 +1,4 @@
-﻿using ApiApplication.Providers;
+﻿using ApiApplication.Interfaces;
 
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,8 +10,8 @@ namespace ApiApplication.Controllers
 	[Route("api/[controller]")]
 	public class ShowTimesController : ControllerBase
     {
-        private readonly ShowtimesService _showTimesService;
-        public ShowTimesController(ShowtimesService showTimesService)
+        private readonly IShowtimesService _showTimesService;
+        public ShowTimesController(IShowtimesService showTimesService)
         {
 			_showTimesService = showTimesService ?? throw new ArgumentNullException(nameof(showTimesService));
 		}
@@ -22,7 +22,6 @@ namespace ApiApplication.Controllers
 		/// <param name="externalMovieId">The external ID of the movie.</param>
 		/// <returns>The created showtime or an error message.</returns>
 		[HttpPost]
-        [Route("showtime")]
         public async Task<IActionResult> CreateShowtimeAsync([FromBody] string externalMovieId)
         {
 			if (string.IsNullOrWhiteSpace(externalMovieId))
@@ -33,7 +32,14 @@ namespace ApiApplication.Controllers
 			if (result.IsSuccess)
 				return Ok(result.ShowTime);
 
-            return BadRequest(result.ErrorMessage);
-        }
-    }
+            return new ObjectResult(new
+			{
+				status = 500,
+				message = result.ErrorMessage
+			})
+			{
+				StatusCode = 500
+			};
+		}
+	}
 }

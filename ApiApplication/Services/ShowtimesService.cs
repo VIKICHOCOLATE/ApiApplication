@@ -13,8 +13,8 @@ using System.Threading.Tasks;
 
 namespace ApiApplication.Providers
 {
-    public class ShowtimesService
-    {
+    public class ShowtimesService : IShowtimesService
+	{
 		private readonly IShowtimesRepository _showtimesRepository;
 		private readonly IExternalMovieService _externalMovieService;
 		private readonly IMapper _mapper;
@@ -52,7 +52,7 @@ namespace ApiApplication.Providers
 					var createdShowtimeResult = _mapper.Map<ShowtimeDTO>(createdShowtime);
 					return (true, createdShowtimeResult, null);
 				}
-				return (false, null, "Movie not found");
+				return (false, null, result.ErrorMessage);
 				
 			}
 			catch (Exception ex)
