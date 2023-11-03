@@ -1,4 +1,5 @@
 ﻿using ApiApplication.Database.Entities;
+using ApiApplication.Features.Seats.DTOs;
 using ApiApplication.Shared.Interfaces;
 using ApiApplication.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ namespace ApiApplication.Features.Seats.Controllers
         /// <param name="movieTitle">Title of the movie for which the seats are being reserved</param>
         /// <returns>Reservation details or error message</returns>
         [HttpPost("reservations")]
-        public async Task<IActionResult> ReserveSeats(int showtimeId, [FromBody] List<SeatEntity> desiredSeats)
+        public async Task<IActionResult> ReserveSeats(int showtimeId, [FromBody] List<SeatDTO> desiredSeats)
         {
             if (desiredSeats == null || !desiredSeats.Any())
             {
@@ -36,8 +37,15 @@ namespace ApiApplication.Features.Seats.Controllers
 
             try
             {
-                var reservationResponse = await _seatsService.ReserveSeats(showtimeId, desiredSeats);
-                return Ok(reservationResponse);
+                var result = await _seatsService.ReserveSeats(showtimeId, desiredSeats);
+				if (result.IsSuccess)
+					return Ok(result.ReservationResponse);
+
+				return StatusCode(500, new
+				{
+					status = 500,
+					message = result.ErrorMessage
+				});
             }
             catch (InvalidOperationException ex)
             {
