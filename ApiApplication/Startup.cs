@@ -7,6 +7,7 @@ using ApiApplication.Features.ShowTimes.Services;
 using ApiApplication.Shared.Interfaces;
 using ApiApplication.Shared.Mappings;
 using ApiApplication.Shared.Middlewares;
+using ApiApplication.Shared.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,7 @@ namespace ApiApplication
 			services.AddTransient<IShowtimesService, ShowtimesService>();
 			services.AddTransient<IExternalMovieService, ExternalMovieService>();
 			services.AddTransient<ISeatsService, SeatsService>();
+			services.AddSingleton<ICacheService, RedisCacheService>();
 
 			services.AddHttpClient("ExternalMovies", config =>
 			{
@@ -49,6 +51,11 @@ namespace ApiApplication
 				options.UseInMemoryDatabase("CinemaDb")
 					.EnableSensitiveDataLogging()
 					.ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+			});
+
+			services.AddStackExchangeRedisCache(options =>
+			{
+				options.Configuration = Configuration.GetConnectionString("RedisConnection");
 			});
 
 			services.AddAutoMapper(typeof(AutoMapping));
