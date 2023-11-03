@@ -2,7 +2,6 @@
 using ApiApplication.Database.Repositories.Abstractions;
 using ApiApplication.Interfaces;
 using ApiApplication.Models.DTO;
-using ApiApplication.Services;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using System;

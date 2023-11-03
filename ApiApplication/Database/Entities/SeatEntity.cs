@@ -1,4 +1,6 @@
-﻿namespace ApiApplication.Database.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ApiApplication.Database.Entities
 {
     public class SeatEntity
     {
@@ -6,5 +8,8 @@
         public short SeatNumber { get; set; }
         public int AuditoriumId { get; set; }
         public AuditoriumEntity Auditorium { get; set; }
-    }
+
+		[Timestamp]
+		public byte[] RowVersion { get; set; }
+	}
 }

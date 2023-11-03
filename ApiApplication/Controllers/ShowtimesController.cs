@@ -1,5 +1,6 @@
 ﻿using ApiApplication.Interfaces;
-
+using ApiApplication.Models.DTO;
+using ApiApplication.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -7,7 +8,6 @@ using System.Threading.Tasks;
 namespace ApiApplication.Controllers
 {
     [ApiController]
-	[Route("api/[controller]")]
 	public class ShowTimesController : ControllerBase
     {
         private readonly IShowtimesService _showTimesService;
@@ -21,25 +21,22 @@ namespace ApiApplication.Controllers
 		/// </summary>
 		/// <param name="externalMovieId">The external ID of the movie.</param>
 		/// <returns>The created showtime or an error message.</returns>
-		[HttpPost]
-        public async Task<IActionResult> CreateShowtimeAsync([FromBody] string externalMovieId)
+		[HttpPost("api/showtimes")]
+		public async Task<ActionResult<ShowtimeDTO>> CreateShowtimeAsync([FromBody] string externalMovieId)
         {
 			if (string.IsNullOrWhiteSpace(externalMovieId))
-				return BadRequest("External movie ID cannot be empty or null.");
+				return BadRequest(ErrorMessages.ShowTimes.EmptyExternalMovieId);
 
 			var result = await _showTimesService.CreateShowtimeWithMovieAsync(externalMovieId);
 
 			if (result.IsSuccess)
 				return Ok(result.ShowTime);
 
-            return new ObjectResult(new
+			return StatusCode(500, new
 			{
 				status = 500,
 				message = result.ErrorMessage
-			})
-			{
-				StatusCode = 500
-			};
+			});
 		}
 	}
 }
