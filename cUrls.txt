@@ -1,8 +1,36 @@
 Please add the cURLs of your tests here:
 
+1. **Create showtime**
+
 curl --location 'https://localhost:7629/api/showtimes' \
 --header 'Content-Type: application/json' \
---data '"ID-test1"
+--data '{
+    "Id": 4,
+    "ExternalMovieId": "ID-test1",
+    "MovieTitle": "The mock movie",
+    "ShowtimeDate": "2029-01-06T17:16:40",
+    "auditoriumId": 2
+}
 
 '
 
+2.**Reserve seats**
+curl --location 'https://localhost:7629/api/seats/reservations?showtimeId=4' \
+--header 'Content-Type: application/json' \
+--data '    [
+         {
+             "Row": 2,
+             "SeatNumber": 5,
+             "AuditoriumId": 4
+         },
+         {
+             "Row": 2,
+             "SeatNumber": 6,
+             "AuditoriumId": 4
+         }
+    ]
+'
+3. **Buy seats**
+curl --location --request PUT 'https://localhost:7629/api/seats/reservations/34183b38-69d4-435a-aa15-1c871409e423/purchase' \
+--header 'Content-Type: application/json' \
+--data '"34183b38-69d4-435a-aa15-1c871409e423"'

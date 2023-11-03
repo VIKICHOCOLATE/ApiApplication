@@ -21,6 +21,8 @@ namespace ApiApplication.Shared.Mappings
 
 			CreateMap<SeatDTO, SeatEntity>();
 			CreateMap<TicketDTO, TicketEntity>();
+			CreateMap<TicketEntity, TicketDTO>();
+
 			CreateMap<ExternalMovieDTO, MovieEntity>();
 		}
 	}

@@ -85,7 +85,7 @@ namespace ApiApplication
 
 			app.UseEndpoints(endpoints =>
 			{
-				endpoints.MapGrpcService<MoviesApiService>();
+				endpoints.MapGrpcService<MoviesGrpcService>();
 				endpoints.MapControllers();
 			});
 
