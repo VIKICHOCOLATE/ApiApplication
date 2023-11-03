@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -67,6 +68,48 @@ namespace ApiApplication.Features.Movies.Services
 					// Cache the fetched movie data
 					await _cacheService.SetCacheDataAsync(cacheKey, result, TimeSpan.FromHours(1)); // 1 hour cache time
 
+
+					return (true, result, null);
+				}
+				return (false, null, response.ReasonPhrase);
+			}
+			catch (Exception ex)
+			{
+				_logger?.LogError(ex.ToString());
+				return (false, null, ex.Message);
+			}
+		}
+
+		public async Task<(bool IsSuccess, ExternalMovieListDTO Movies, string ErrorMessage)> FetchAllMoviesAsync()
+		{
+			var cacheKey = "AllMovies";
+
+			// First, try to get the movie data from the cache
+			var cachedMovies = await _cacheService.GetCachedDataAsync<ExternalMovieListDTO>(cacheKey);
+
+			if (cachedMovies != null && cachedMovies.Movies.Any())
+			{
+				return (true, cachedMovies, null);
+			}
+
+			try
+			{
+				using var client = _httpClientFactory.CreateClient("ExternalMovies");
+				client.DefaultRequestHeaders.Add(ApiKeyHeaderName, _apiKey);
+
+				var response = await client.GetAsync(BasePath);
+
+				if (response.IsSuccessStatusCode)
+				{
+					var content = await response.Content.ReadAsStringAsync();
+					var options = new JsonSerializerOptions
+					{
+						PropertyNameCaseInsensitive = true
+					};
+					var result = JsonSerializer.Deserialize<ExternalMovieListDTO>(content, options);
+
+					// Cache the fetched movie data
+					await _cacheService.SetCacheDataAsync(cacheKey, result, TimeSpan.FromHours(1)); // 1 hour cache time
 
 					return (true, result, null);
 				}
