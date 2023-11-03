@@ -16,6 +16,7 @@ namespace ApiApplication.Shared.Mappings
 
 			CreateMap<ShowtimeEntity, ShowtimeDTO>()
 			.ForMember(dest => dest.ExternalMovieId, opt => opt.MapFrom(src => src.Movie.Id))
+			.ForMember(dest => dest.ShowtimeDate, opt => opt.MapFrom(src => src.SessionDate))
 			.ForMember(dest => dest.MovieTitle, opt => opt.MapFrom(src => src.Movie.Title));
 
 			CreateMap<SeatDTO, SeatEntity>();

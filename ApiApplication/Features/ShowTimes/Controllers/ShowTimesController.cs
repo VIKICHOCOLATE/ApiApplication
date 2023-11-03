@@ -48,7 +48,8 @@ namespace ApiApplication.Features.ShowTimes.Controllers
 				});
 			}
 
-			return Ok(showtimeCreationResult.ShowTime);
+			// Return the created resource with a 201 status code, and set the location header
+			return Created(string.Empty, showtimeCreationResult.ShowTime);
 		}
 
 		private async Task<(bool IsSuccess, MovieEntity Movie, string ErrorMessage)> FetchMovieFromExternalService(string externalMovieId)
@@ -67,6 +68,7 @@ namespace ApiApplication.Features.ShowTimes.Controllers
 		{
 			var showtimeEntity = new ShowtimeEntity
 			{
+				Id = showtimeDto.Id,
 				Movie = movie,
 				SessionDate = showtimeDto.ShowtimeDate,
 				AuditoriumId = showtimeDto.AuditoriumId,

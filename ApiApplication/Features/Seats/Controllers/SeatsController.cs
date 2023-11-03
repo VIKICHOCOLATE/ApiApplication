@@ -1,5 +1,4 @@
-﻿using ApiApplication.Database.Entities;
-using ApiApplication.Features.Seats.DTOs;
+﻿using ApiApplication.Features.Seats.DTOs;
 using ApiApplication.Shared.Interfaces;
 using ApiApplication.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
