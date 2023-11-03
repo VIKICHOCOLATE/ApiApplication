@@ -10,6 +10,7 @@ namespace ApiApplication.Shared.Interfaces
     {
 		Task<(bool IsSuccess, ReservationResponse ReservationResponse, string ErrorMessage)> ReserveSeats(int showtimeId, List<SeatDTO> desiredSeats);
 
-		Task BuySeat(Guid reservationGuid);
-    }
+		Task<(bool IsSuccess, TicketDTO ticket, string ErrorMessage)> BuySeat(Guid reservationGuid)
+
+	}
 }

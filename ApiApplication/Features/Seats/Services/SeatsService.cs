@@ -1,4 +1,5 @@
-﻿using ApiApplication.Database.Repositories.Abstractions;
+﻿using ApiApplication.Database.Entities;
+using ApiApplication.Database.Repositories.Abstractions;
 using ApiApplication.Features.Seats.DTOs;
 using ApiApplication.Features.Seats.Models;
 using ApiApplication.Shared.Interfaces;
@@ -54,7 +55,8 @@ namespace ApiApplication.Features.Seats.Services
 					return (false, null, ErrorMessages.Seats.ShowtimeNotFound);
 				}
 
-				var reservedTicket = await _ticketsRepository.CreateAsync(showtime.First(), desiredSeats, CancellationToken.None);
+				var desiredSeatsEntity = _mapper.Map<List<SeatEntity>>(desiredSeats);
+				var reservedTicket = await _ticketsRepository.CreateAsync(showtime.First(), desiredSeatsEntity, CancellationToken.None);
 
 				var reservationResponse = new ReservationResponse
 				{
@@ -68,19 +70,19 @@ namespace ApiApplication.Features.Seats.Services
 			}
 			catch (DbUpdateConcurrencyException ex)
 			{
-				_logger?.LogError(ex.ToString());
 				_ticketsRepository.Rollback();
+				_logger?.LogError(ex.ToString());
 				return (false, null, ErrorMessages.Seats.ConcurrencyConflictError);
 			}
 			catch (Exception ex)
 			{
-				_logger?.LogError(ex.ToString());
 				_ticketsRepository.Rollback();
+				_logger?.LogError(ex.ToString());
 				return (false, null, ex.Message);
 			}
 		}
 
-		public async Task BuySeat(Guid reservationGuid)
+		public async Task<(bool IsSuccess, TicketDTO ticket, string ErrorMessage)> BuySeat(Guid reservationGuid)
 		{
 			using var transaction = _ticketsRepository.BeginTransaction();
 
@@ -89,16 +91,20 @@ namespace ApiApplication.Features.Seats.Services
 				var ticket = await _ticketsRepository.GetAsync(reservationGuid, CancellationToken.None);
 				if (ticket == null)
 				{
-					throw new InvalidOperationException(ErrorMessages.Seats.InvalidReservation);
+					return (false, null, ErrorMessages.Seats.InvalidReservation);
 				}
-				await _ticketsRepository.ConfirmPaymentAsync(ticket, CancellationToken.None);
 
+				var result = await _ticketsRepository.ConfirmPaymentAsync(ticket, CancellationToken.None);
 				_ticketsRepository.Commit();
+
+				var ticketDTO = _mapper.Map<TicketDTO>(result);
+				return (true, ticketDTO, null);
 			}
-			catch (DbUpdateConcurrencyException)
+			catch (DbUpdateConcurrencyException ex)
 			{
 				_ticketsRepository.Rollback();
-				throw new InvalidOperationException(ErrorMessages.Seats.ConcurrencyConflictError);
+				_logger?.LogError(ex.ToString());
+				return (false, null, ErrorMessages.Seats.ConcurrencyConflictError);
 			}
 		}
 
