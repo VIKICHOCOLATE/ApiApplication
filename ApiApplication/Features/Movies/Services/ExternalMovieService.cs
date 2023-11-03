@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ApiApplication.Features.Movies.Services
 {
-	public class ExternalMovieService : IExternalMovieService
+	public class ExternalMovieService : IMovieService
 	{
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly ILogger<ExternalMovieService> _logger;
@@ -37,7 +37,7 @@ namespace ApiApplication.Features.Movies.Services
 
 		}
 
-		public async Task<(bool IsSuccess, ExternalMovieDTO Movie, string ErrorMessage)> FetchMovieByIdAsync(string movieId)
+		public async Task<(bool IsSuccess, ExternalMovieDTO Movie, string ErrorMessage)> GetByIdAsync(string movieId)
 		{
 			var cacheKey = $"Movie_{movieId}";
 
@@ -80,7 +80,7 @@ namespace ApiApplication.Features.Movies.Services
 			}
 		}
 
-		public async Task<(bool IsSuccess, ExternalMovieListDTO Movies, string ErrorMessage)> FetchAllMoviesAsync()
+		public async Task<(bool IsSuccess, ExternalMovieListDTO Movies, string ErrorMessage)> GetAllAsync()
 		{
 			var cacheKey = "AllMovies";
 

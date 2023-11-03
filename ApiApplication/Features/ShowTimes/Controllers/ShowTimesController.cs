@@ -13,10 +13,10 @@ namespace ApiApplication.Features.ShowTimes.Controllers
     public class ShowTimesController : ControllerBase
     {
         private readonly IShowtimesService _showTimesService;
-		private readonly IExternalMovieService _externalMovieService;
+		private readonly IMovieService _externalMovieService;
 		private readonly IMapper _mapper;
 		public ShowTimesController(IShowtimesService showTimesService, 
-			IExternalMovieService externalMovieService,
+			IMovieService externalMovieService,
 			IMapper mapper)
         {
             _showTimesService = showTimesService ?? throw new ArgumentNullException(nameof(showTimesService));
@@ -54,7 +54,7 @@ namespace ApiApplication.Features.ShowTimes.Controllers
 
 		private async Task<(bool IsSuccess, MovieEntity Movie, string ErrorMessage)> FetchMovieFromExternalService(string externalMovieId)
 		{
-			var (isSuccess, externalMovie, errorMessage) = await _externalMovieService.FetchMovieByIdAsync(externalMovieId.ToString());
+			var (isSuccess, externalMovie, errorMessage) = await _externalMovieService.GetByIdAsync(externalMovieId.ToString());
 			if (!isSuccess)
 			{
 				return (false, null, errorMessage);

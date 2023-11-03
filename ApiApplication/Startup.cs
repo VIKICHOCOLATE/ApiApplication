@@ -37,7 +37,10 @@ namespace ApiApplication
 			services.AddTransient<IAuditoriumsRepository, AuditoriumsRepository>();
 
 			services.AddTransient<IShowtimesService, ShowtimesService>();
-			services.AddTransient<IExternalMovieService, ExternalMovieService>();
+
+			// For HTTP:
+			services.AddTransient<IMovieService, ExternalMovieService>();
+
 			services.AddTransient<ISeatsService, SeatsService>();
 			services.AddSingleton<ICacheService, RedisCacheService>();
 
