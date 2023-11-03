@@ -1,6 +1,6 @@
-﻿using ApiApplication.Interfaces;
-using ApiApplication.Models.DTO;
-using ApiApplication.Utilities;
+﻿using ApiApplication.Models.DTO;
+using ApiApplication.Shared.Interfaces;
+using ApiApplication.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;

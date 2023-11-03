@@ -1,6 +1,5 @@
-﻿using ApiApplication.Interfaces;
-using ApiApplication.Models.DTO;
-
+﻿using ApiApplication.Models.DTO;
+using ApiApplication.Shared.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 

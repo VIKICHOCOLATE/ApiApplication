@@ -20,4 +20,11 @@
     <Protobuf Include="movies.proto" GrpcServices="Client;Server" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Movies\" />
+    <Folder Include="Features\Seats\DTOs\" />
+    <Folder Include="Features\Seats\Models\" />
+    <Folder Include="Features\ShowTimes\" />
+  </ItemGroup>
+
 </Project>

@@ -1,12 +1,11 @@
 using ApiApplication.Database;
 using ApiApplication.Database.Repositories;
 using ApiApplication.Database.Repositories.Abstractions;
-using ApiApplication.Interfaces;
-using ApiApplication.Middlewares;
-using ApiApplication.Models;
 using ApiApplication.Providers;
 using ApiApplication.Services;
-
+using ApiApplication.Shared.Interfaces;
+using ApiApplication.Shared.Mappings;
+using ApiApplication.Shared.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +18,7 @@ using System;
 
 namespace ApiApplication
 {
-	public class Startup
+    public class Startup
 	{
 		public Startup(IConfiguration configuration)
 		{
