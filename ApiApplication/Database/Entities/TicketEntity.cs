@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace ApiApplication.Database.Entities
 {
@@ -18,8 +17,5 @@ namespace ApiApplication.Database.Entities
         public DateTime CreatedTime { get; set; }
         public bool Paid { get; set; }
         public ShowtimeEntity Showtime { get; set; }
-
-		[Timestamp]
-		public byte[] RowVersion { get; set; }
 	}
 }

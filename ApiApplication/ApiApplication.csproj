@@ -26,7 +26,6 @@
     <Folder Include="Controllers\" />
     <Folder Include="Features\Movies\Controllers\" />
     <Folder Include="Features\Movies\Models\" />
-    <Folder Include="Features\ShowTimes\Models\" />
   </ItemGroup>
 
 </Project>
