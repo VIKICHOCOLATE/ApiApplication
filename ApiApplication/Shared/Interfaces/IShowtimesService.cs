@@ -10,7 +10,6 @@ namespace ApiApplication.Shared.Interfaces
 {
     public interface IShowtimesService
     {
-        Task<IEnumerable<ShowtimeDTO>> GetAllShowTimesAsync(Expression<Func<ShowtimeEntity, bool>> filter = null, CancellationToken cancel = default);
-        Task<(bool IsSuccess, ShowtimeDTO ShowTime, string ErrorMessage)> CreateShowtimeWithMovieAsync(string externalMovieId, CancellationToken cancellationToken = default);
+        Task<(bool IsSuccess, ShowtimeDTO ShowTime, string ErrorMessage)> CreateShowtimeWithMovieAsync(ShowtimeEntity showtimeEntity, CancellationToken cancellationToken = default);
     }
 }
