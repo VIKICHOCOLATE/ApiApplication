@@ -55,7 +55,7 @@ namespace ApiApplication.Features.Seats.Controllers
             try
             {
                 await _seatsService.BuySeat(reservationGuid);
-                return Ok("Seat successfully purchased.");
+                return Ok(ErrorMessages.Seats.PurchaseConfirmation);
             }
             catch (InvalidOperationException ex)
             {
@@ -74,7 +74,7 @@ namespace ApiApplication.Features.Seats.Controllers
 
         private IActionResult HandleUnknownException(Exception ex)
         {
-            return StatusCode(500, "An error occurred while processing your request.");
+            return StatusCode(500, $"An error {ex.Message} occurred while processing your request.");
         }
     }
 }

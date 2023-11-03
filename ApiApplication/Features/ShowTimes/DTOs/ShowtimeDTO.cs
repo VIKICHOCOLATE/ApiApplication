@@ -1,5 +1,4 @@
-﻿using ApiApplication.Database.Entities;
-using System;
+﻿using System;
 
 namespace ApiApplication.Features.ShowTimes.DTOs
 {

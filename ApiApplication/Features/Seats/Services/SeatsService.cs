@@ -82,7 +82,7 @@ namespace ApiApplication.Features.Seats.Services
             {
                 if (sortedSeats[i].Row == sortedSeats[i - 1].Row && sortedSeats[i].SeatNumber - sortedSeats[i - 1].SeatNumber != 1)
                 {
-                    throw new InvalidOperationException("Seats are not contiguous.");
+                    throw new InvalidOperationException(ErrorMessages.Seats.SeatsNotContiguousError);
                 }
             }
         }
@@ -96,7 +96,7 @@ namespace ApiApplication.Features.Seats.Services
             {
                 if (reservedSeats.Any(r => r.Row == seat.Row && r.SeatNumber == seat.SeatNumber))
                 {
-                    throw new InvalidOperationException("One or more seats are already reserved or sold.");
+                    throw new InvalidOperationException(ErrorMessages.Seats.SeatsAreSoldError);
                 }
             }
         }

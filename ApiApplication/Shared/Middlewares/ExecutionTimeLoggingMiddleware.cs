@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ApiApplication.Shared.Middlewares
 {
