@@ -1,7 +1,7 @@
 ﻿using ApiApplication.Database.Entities;
 using System;
 
-namespace ApiApplication.Models.DTO
+namespace ApiApplication.Features.ShowTimes.DTOs
 {
     public class ShowtimeDTO
     {

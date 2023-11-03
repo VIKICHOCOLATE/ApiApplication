@@ -1,10 +1,10 @@
 ﻿using ApiApplication.Database.Entities;
-using ApiApplication.Models.DTO;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
+using ApiApplication.Features.ShowTimes.DTOs;
 
 namespace ApiApplication.Shared.Interfaces
 {

@@ -21,10 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\" />
     <Folder Include="Features\Movies\" />
     <Folder Include="Features\Seats\DTOs\" />
     <Folder Include="Features\Seats\Models\" />
-    <Folder Include="Features\ShowTimes\" />
+    <Folder Include="Features\ShowTimes\Models\" />
   </ItemGroup>
 
 </Project>
