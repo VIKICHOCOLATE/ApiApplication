@@ -1,4 +1,4 @@
-﻿using ApiApplication.Models.DTO;
+﻿using ApiApplication.Features.Movies.DTOs;
 using System.Threading.Tasks;
 
 namespace ApiApplication.Shared.Interfaces

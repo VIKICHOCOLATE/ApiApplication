@@ -1,6 +1,6 @@
 ﻿using ApiApplication.Database.Entities;
+using ApiApplication.Features.Movies.DTOs;
 using ApiApplication.Features.ShowTimes.DTOs;
-using ApiApplication.Models.DTO;
 
 using AutoMapper;
 

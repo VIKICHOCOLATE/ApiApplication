@@ -1,5 +1,5 @@
 ﻿using ApiApplication.Database.Entities;
-using ApiApplication.Models;
+using ApiApplication.Features.Seats.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

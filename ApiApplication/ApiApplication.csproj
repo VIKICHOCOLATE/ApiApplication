@@ -22,10 +22,10 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Features\Movies\" />
-    <Folder Include="Features\Seats\DTOs\" />
-    <Folder Include="Features\Seats\Models\" />
+    <Folder Include="Features\Movies\Controllers\" />
+    <Folder Include="Features\Movies\Models\" />
     <Folder Include="Features\ShowTimes\Models\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

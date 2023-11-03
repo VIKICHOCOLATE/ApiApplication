@@ -1,8 +1,8 @@
 using ApiApplication.Database;
 using ApiApplication.Database.Repositories;
 using ApiApplication.Database.Repositories.Abstractions;
+using ApiApplication.Features.Movies.Services;
 using ApiApplication.Features.ShowTimes.Services;
-using ApiApplication.Services;
 using ApiApplication.Shared.Interfaces;
 using ApiApplication.Shared.Mappings;
 using ApiApplication.Shared.Middlewares;

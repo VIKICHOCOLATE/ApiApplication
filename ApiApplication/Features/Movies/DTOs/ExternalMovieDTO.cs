@@ -1,5 +1,4 @@
-﻿
-namespace ApiApplication.Models.DTO
+﻿namespace ApiApplication.Features.Movies.DTOs
 {
     public class ExternalMovieDTO
     {

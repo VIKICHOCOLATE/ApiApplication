@@ -1,6 +1,7 @@
 ﻿using System;
+using ApiApplication.Features.Seats.Models;
 
-namespace ApiApplication.Models.DTO
+namespace ApiApplication.Features.Seats.DTOs
 {
     public class SeatDTO
     {

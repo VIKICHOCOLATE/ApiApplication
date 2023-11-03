@@ -1,6 +1,6 @@
 ﻿using ApiApplication.Database.Entities;
 using ApiApplication.Database.Repositories.Abstractions;
-using ApiApplication.Models;
+using ApiApplication.Features.Seats.Models;
 using ApiApplication.Shared.Interfaces;
 using ApiApplication.Shared.Utilities;
 using Microsoft.EntityFrameworkCore;
