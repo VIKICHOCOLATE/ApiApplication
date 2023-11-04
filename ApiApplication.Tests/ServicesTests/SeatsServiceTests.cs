@@ -44,8 +44,8 @@ namespace ApiApplication.Tests.Services
 				new SeatDto { AuditoriumId = 1, Row = 1, SeatNumber = 2 }
 			};
 
-			var showtime = new List<ShowtimeEntity> { /* Populate with a valid showtime entity */ 
-				new ShowtimeEntity
+			var showtime = new List<ShowtimeEntity> { // Populate with a valid showtime entity
+				new()
 				{
 					Id = 1,
 					Movie = new MovieEntity
@@ -62,8 +62,8 @@ namespace ApiApplication.Tests.Services
 				Showtime = showtime.First(),
 				Seats = new List<SeatEntity>
 				{
-					new SeatEntity { Row = 1, SeatNumber = 1, AuditoriumId = 1 },
-					new SeatEntity { Row = 1, SeatNumber = 2, AuditoriumId = 1 }
+					new() { Row = 1, SeatNumber = 1, AuditoriumId = 1 },
+					new() { Row = 1, SeatNumber = 2, AuditoriumId = 1 }
 				}
 			};
 			var reservationResponse = new ReservationResponse
