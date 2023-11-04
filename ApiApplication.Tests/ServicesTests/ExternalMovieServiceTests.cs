@@ -9,14 +9,18 @@ using ApiApplication.Shared.Services;
 
 public class ExternalMovieServiceTests
 {
-	private readonly Mock<IHttpClientFactory> _httpClientFactoryMock = new Mock<IHttpClientFactory>();
-	private readonly Mock<ILogger<ExternalMovieService>> _loggerMock = new Mock<ILogger<ExternalMovieService>>();
-	private readonly Mock<IConfiguration> _configMock = new Mock<IConfiguration>();
-	private readonly Mock<ICacheService> _cacheServiceMock = new Mock<ICacheService>();
-	private readonly Mock<HttpMessageHandler> _handlerMock = new Mock<HttpMessageHandler>();
+	private readonly Mock<IHttpClientFactory> _httpClientFactoryMock;
+	private readonly Mock<ILogger<ExternalMovieService>> _loggerMock;
+	private readonly Mock<IConfiguration> _configMock;
+	private readonly Mock<ICacheService> _cacheServiceMock;
 
-	public ExternalMovieServiceTests()
+	public ExternalMovieServiceTests(Mock<IHttpClientFactory> httpClientFactoryMock, 
+		Mock<ILogger<ExternalMovieService>> loggerMock, Mock<IConfiguration> configMock, Mock<ICacheService> cacheServiceMock)
 	{
+		_httpClientFactoryMock = httpClientFactoryMock;
+		_loggerMock = loggerMock;
+		_configMock = configMock;
+		_cacheServiceMock = cacheServiceMock;
 		_configMock.Setup(c => c["Services:ExternalMovies:ApiKey"]).Returns("test_api_key");
 	}
 
