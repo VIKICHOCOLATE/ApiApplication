@@ -8,11 +8,12 @@ using Moq;
 
 public class SeatsControllerTests
 {
-	private readonly Mock<ISeatsService> _seatsServiceMock = new Mock<ISeatsService>();
+	private readonly Mock<ISeatsService> _seatsServiceMock;
 	private readonly SeatsController _controller;
 
-	public SeatsControllerTests()
+	public SeatsControllerTests(Mock<ISeatsService> seatsServiceMock)
 	{
+		_seatsServiceMock = seatsServiceMock;
 		_controller = new SeatsController(_seatsServiceMock.Object);
 	}
 
@@ -64,7 +65,7 @@ public class SeatsControllerTests
 	{
 		// Arrange
 		var seats = new List<SeatDto> { new SeatDto() };
-		var errorMessage = "An error occurred";
+		const string errorMessage = "An error occurred";
 		_seatsServiceMock.Setup(x => x.ReserveSeats(1, seats))
 			.ReturnsAsync((false, null, errorMessage));
 
