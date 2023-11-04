@@ -30,7 +30,7 @@ namespace ApiApplication.Features.ShowTimes.Controllers
 		/// <param name="showtimeDto">The details for creating the showtime.</param>
 		/// <returns>The created showtime or an error message.</returns>
 		[HttpPost("api/showtimes")]
-        public async Task<ActionResult<ShowtimeDTO>> CreateShowtimeAsync([FromBody] ShowtimeDTO showtimeDto)
+        public async Task<ActionResult<ShowtimeDto>> CreateShowtimeAsync([FromBody] ShowtimeDto showtimeDto)
         {
 			var externalMovieResult = await FetchMovieFromExternalService(showtimeDto.ExternalMovieId);
 			if (!externalMovieResult.IsSuccess)
@@ -48,13 +48,13 @@ namespace ApiApplication.Features.ShowTimes.Controllers
 				});
 			}
 
-			// Return the created resource with a 201 status code, and set the location header
+			// Return the created resource with a 201 status code
 			return Created(string.Empty, showtimeCreationResult.ShowTime);
 		}
 
 		private async Task<(bool IsSuccess, MovieEntity Movie, string ErrorMessage)> FetchMovieFromExternalService(string externalMovieId)
 		{
-			var (isSuccess, externalMovie, errorMessage) = await _externalMovieService.GetByIdAsync(externalMovieId.ToString());
+			var (isSuccess, externalMovie, errorMessage) = await _externalMovieService.GetByIdAsync(externalMovieId);
 			if (!isSuccess)
 			{
 				return (false, null, errorMessage);
@@ -64,7 +64,7 @@ namespace ApiApplication.Features.ShowTimes.Controllers
 			return (true, movieEntity, null);
 		}
 
-		private async Task<(bool IsSuccess, ShowtimeDTO ShowTime, string ErrorMessage)> CreateShowtimeWithMovie(MovieEntity movie, ShowtimeDTO showtimeDto)
+		private async Task<(bool IsSuccess, ShowtimeDto ShowTime, string ErrorMessage)> CreateShowtimeWithMovie(MovieEntity movie, ShowtimeDto showtimeDto)
 		{
 			var showtimeEntity = new ShowtimeEntity
 			{
@@ -72,7 +72,7 @@ namespace ApiApplication.Features.ShowTimes.Controllers
 				Movie = movie,
 				SessionDate = showtimeDto.ShowtimeDate,
 				AuditoriumId = showtimeDto.AuditoriumId,
-				Tickets = new List<TicketEntity>()  // Initialize an empty list or add default ticket entries if needed
+				Tickets = new List<TicketEntity>()
 			};
 
 			return await _showTimesService.CreateShowtimeWithMovieAsync(showtimeEntity);

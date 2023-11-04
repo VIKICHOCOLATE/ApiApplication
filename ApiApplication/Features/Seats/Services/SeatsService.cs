@@ -32,7 +32,7 @@ namespace ApiApplication.Features.Seats.Services
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
 
-		public async Task<(bool IsSuccess, ReservationResponse ReservationResponse, string ErrorMessage)> ReserveSeats(int showtimeId, List<SeatDTO> desiredSeats)
+		public async Task<(bool IsSuccess, ReservationResponse ReservationResponse, string ErrorMessage)> ReserveSeats(int showtimeId, List<SeatDto> desiredSeats)
 		{
 			using var transaction = _ticketsRepository.BeginTransaction();
 
@@ -97,8 +97,8 @@ namespace ApiApplication.Features.Seats.Services
 				var result = await _ticketsRepository.ConfirmPaymentAsync(ticket, CancellationToken.None);
 				_ticketsRepository.Commit();
 
-				var ticketDTO = _mapper.Map<TicketDTO>(result);
-				return (true, ticketDTO, null);
+				var ticketDto = _mapper.Map<TicketDTO>(result);
+				return (true, ticketDto, null);
 			}
 			catch (DbUpdateConcurrencyException ex)
 			{
@@ -108,7 +108,7 @@ namespace ApiApplication.Features.Seats.Services
 			}
 		}
 
-		private bool ValidateContiguousSeats(List<SeatDTO> desiredSeats)
+		private bool ValidateContiguousSeats(IEnumerable<SeatDto> desiredSeats)
 		{
 			var sortedSeats = desiredSeats.OrderBy(s => s.Row).ThenBy(s => s.SeatNumber).ToList();
 			for (int i = 1; i < sortedSeats.Count; i++)
@@ -121,7 +121,7 @@ namespace ApiApplication.Features.Seats.Services
 			return true;
 		}
 
-		private async Task<bool> EnsureSeatsAreAvailable(int showtimeId, List<SeatDTO> desiredSeats)
+		private async Task<bool> EnsureSeatsAreAvailable(int showtimeId, List<SeatDto> desiredSeats)
 		{
 			var existingTickets = await _ticketsRepository.GetEnrichedAsync(showtimeId, CancellationToken.None);
 			var reservedSeats = existingTickets.SelectMany(t => t.Seats).ToList();

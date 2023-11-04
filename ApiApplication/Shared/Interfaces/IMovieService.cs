@@ -5,8 +5,8 @@ namespace ApiApplication.Shared.Interfaces
 {
     public interface IMovieService
     {
-        Task<(bool IsSuccess, ExternalMovieDTO Movie, string ErrorMessage)> GetByIdAsync(string movieId);
-		Task<(bool IsSuccess, ExternalMovieListDTO Movies, string ErrorMessage)> GetAllAsync();
+        Task<(bool IsSuccess, ExternalMovieDto Movie, string ErrorMessage)> GetByIdAsync(string movieId);
+		Task<(bool IsSuccess, ExternalMovieListDto Movies, string ErrorMessage)> GetAllAsync();
 
 	}
 }

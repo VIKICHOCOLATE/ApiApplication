@@ -20,14 +20,14 @@ namespace ApiApplication.Features.Seats.Controllers
             _seatsService = seatsService ?? throw new ArgumentNullException(nameof(seatsService));
         }
 
-        /// <summary>
-        /// Reserve seats for a movie
-        /// </summary>
-        /// <param name="seatIds">List of seat IDs to be reserved</param>
-        /// <param name="movieTitle">Title of the movie for which the seats are being reserved</param>
-        /// <returns>Reservation details or error message</returns>
-        [HttpPost("reservations")]
-        public async Task<IActionResult> ReserveSeats(int showtimeId, [FromBody] List<SeatDTO> desiredSeats)
+		/// <summary>
+		/// reserve seats for a showtime
+		/// </summary>
+		/// <param name="showtimeId"></param>
+		/// <param name="desiredSeats"></param>
+		/// <returns></returns>
+		[HttpPost("reservations")]
+        public async Task<IActionResult> ReserveSeats(int showtimeId, [FromBody] List<SeatDto> desiredSeats)
         {
             if (desiredSeats == null || !desiredSeats.Any())
             {

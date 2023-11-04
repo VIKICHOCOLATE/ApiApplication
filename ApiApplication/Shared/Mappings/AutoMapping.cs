@@ -11,19 +11,19 @@ namespace ApiApplication.Shared.Mappings
 	{
 		public AutoMapping()
 		{
-			CreateMap<ExternalMovieDTO, MovieEntity>()
+			CreateMap<ExternalMovieDto, MovieEntity>()
 			.ForMember(dest => dest.Stars, opt => opt.MapFrom(src => src.Crew));
 
-			CreateMap<ShowtimeEntity, ShowtimeDTO>()
+			CreateMap<ShowtimeEntity, ShowtimeDto>()
 			.ForMember(dest => dest.ExternalMovieId, opt => opt.MapFrom(src => src.Movie.Id))
 			.ForMember(dest => dest.ShowtimeDate, opt => opt.MapFrom(src => src.SessionDate))
 			.ForMember(dest => dest.MovieTitle, opt => opt.MapFrom(src => src.Movie.Title));
 
-			CreateMap<SeatDTO, SeatEntity>();
+			CreateMap<SeatDto, SeatEntity>();
 			CreateMap<TicketDTO, TicketEntity>();
 			CreateMap<TicketEntity, TicketDTO>();
 
-			CreateMap<ExternalMovieDTO, MovieEntity>();
+			CreateMap<ExternalMovieDto, MovieEntity>();
 		}
 	}
 }

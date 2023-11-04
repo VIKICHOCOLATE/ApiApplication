@@ -2,7 +2,7 @@
 
 namespace ApiApplication.Features.ShowTimes.DTOs
 {
-    public class ShowtimeDTO
+    public class ShowtimeDto
     {
         public int Id { get; set; }
         public string ExternalMovieId { get; set; }

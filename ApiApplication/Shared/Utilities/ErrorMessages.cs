@@ -2,12 +2,6 @@
 {
     public static class ErrorMessages
     {
-        public static class ShowTimes
-        {
-            public const string EmptyExternalMovieId = "External movie ID cannot be empty or null.";
-            public const string InternalServerError = "An internal server error occurred.";
-        }
-
         public static class Seats
         {
             public const string ShowtimeNotFound = "Showtime not found.";
@@ -18,5 +12,13 @@
 			public const string SeatsNotContiguousError = "Seats are not contiguous.";
 			public const string SeatsAreSoldError = "One or more seats are already reserved or sold.";
         }
+
+        public static class Movies
+        {
+	        public const string NoMoviesFoundError = "No movies found.";
+	        public const string UnexpectedDataReturned = "Unexpected data type returned or no data available.";
+	        public const string NoMovieForId = "No movie found for the provided ID.";
+	        public const string NoMoviesFoundedForSearchText = "No movies found for the provided search text.";
+		}
     }
 }

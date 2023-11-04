@@ -26,12 +26,12 @@ namespace ApiApplication.Features.ShowTimes.Services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<(bool IsSuccess, ShowtimeDTO ShowTime, string ErrorMessage)> CreateShowtimeWithMovieAsync(ShowtimeEntity showtimeEntity, CancellationToken cancellationToken = default)
+        public async Task<(bool IsSuccess, ShowtimeDto ShowTime, string ErrorMessage)> CreateShowtimeWithMovieAsync(ShowtimeEntity showtimeEntity, CancellationToken cancellationToken = default)
         {
             try
             {
 				var createdShowtime = await _showtimesRepository.CreateShowtime(showtimeEntity, CancellationToken.None);
-				var createdShowtimeDto = _mapper.Map<ShowtimeDTO>(createdShowtime);
+				var createdShowtimeDto = _mapper.Map<ShowtimeDto>(createdShowtime);
 
 				return (true, createdShowtimeDto, null);
 

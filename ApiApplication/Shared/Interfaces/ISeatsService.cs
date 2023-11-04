@@ -8,7 +8,7 @@ namespace ApiApplication.Shared.Interfaces
 {
     public interface ISeatsService
     {
-		Task<(bool IsSuccess, ReservationResponse ReservationResponse, string ErrorMessage)> ReserveSeats(int showtimeId, List<SeatDTO> desiredSeats);
+		Task<(bool IsSuccess, ReservationResponse ReservationResponse, string ErrorMessage)> ReserveSeats(int showtimeId, List<SeatDto> desiredSeats);
 
 		Task<(bool IsSuccess, TicketDTO ticket, string ErrorMessage)> BuySeat(Guid reservationGuid);
 	}

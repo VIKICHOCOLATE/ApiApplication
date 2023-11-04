@@ -2,9 +2,9 @@
 
 namespace ApiApplication.Features.Movies.DTOs
 {
-	public class ExternalMovieListDTO
+	public class ExternalMovieListDto
 	{
-		public List<ExternalMovieDTO> Movies { get; set; }
+		public List<ExternalMovieDto> Movies { get; set; }
 	}
 
 }

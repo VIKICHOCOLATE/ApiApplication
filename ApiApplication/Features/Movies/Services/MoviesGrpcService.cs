@@ -5,23 +5,25 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiApplication.Shared.Utilities;
+using Microsoft.Extensions.Configuration;
 
 namespace ApiApplication.Features.Movies.Services
 {
 	public class MoviesGrpcService : MoviesApi.MoviesApiBase
 	{
 		private readonly ILogger<MoviesGrpcService> _logger;
-		private readonly GrpcChannel _channel;
 		private readonly MoviesApi.MoviesApiClient _client;
 
-		private const string BaseAddress = "https://localhost:7443";
+		private const string BaseAddressConfigurationPath = "Services:ExternalMovies:gRPC";
 
-		public MoviesGrpcService(ILogger<MoviesGrpcService> logger)
+
+		public MoviesGrpcService(ILogger<MoviesGrpcService> logger, IConfiguration configuration)
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
-			_channel = GrpcChannel.ForAddress(BaseAddress);
-			_client = new MoviesApi.MoviesApiClient(_channel);
+			var basePath = configuration[BaseAddressConfigurationPath];
+			var channel = GrpcChannel.ForAddress(basePath);
+			_client = new MoviesApi.MoviesApiClient(channel);
 		}
 
 		public override async Task<responseModel> GetAll(Empty request, ServerCallContext context)
@@ -30,7 +32,6 @@ namespace ApiApplication.Features.Movies.Services
 			{
 				// Calling the gRPC service to fetch all movies
 				var moviesResponse = await _client.GetAllAsync(request);
-
 				if (moviesResponse != null && moviesResponse.Data.Is(showListResponse.Descriptor))
 				{
 					var shows = moviesResponse.Data.Unpack<showListResponse>();
@@ -38,32 +39,15 @@ namespace ApiApplication.Features.Movies.Services
 					{
 						return moviesResponse;  // Directly returning the fetched response if it has data
 					}
-					else
-					{
-						return new responseModel
-						{
-							Success = false,
-							Exceptions = { new moviesApiException { Message = "No movies found.", StatusCode = (int)StatusCode.NotFound } }
-						};
-					}
+
+					return GetResponseModel(false, ErrorMessages.Movies.NoMoviesFoundError, (int) StatusCode.NotFound);
 				}
-				else
-				{
-					return new responseModel
-					{
-						Success = false,
-						Exceptions = { new moviesApiException { Message = "Unexpected data type returned or no data available.", StatusCode = (int)StatusCode.Unknown } }
-					};
-				}
+				return GetResponseModel(false, ErrorMessages.Movies.UnexpectedDataReturned, (int) StatusCode.Unknown);
 			}
 			catch (Exception ex)
 			{
 				_logger?.LogError(ex.ToString());
-				return new responseModel
-				{
-					Success = false,
-					Exceptions = { new moviesApiException { Message = ex.Message, StatusCode = (int)StatusCode.Internal } }
-				};
+				return GetResponseModel(false, ex.Message, (int)StatusCode.Internal);
 			}
 		}
 
@@ -76,14 +60,12 @@ namespace ApiApplication.Features.Movies.Services
 				{
 					return movieResponse;
 				}
-				else
+
+				return new responseModel
 				{
-					return new responseModel
-					{
-						Success = false,
-						Exceptions = { new moviesApiException { Message = "No movie found for the provided ID.", StatusCode = (int)StatusCode.NotFound } }
-					};
-				}
+					Success = false,
+					Exceptions = { new moviesApiException { Message = ErrorMessages.Movies.NoMovieForId, StatusCode = (int)StatusCode.NotFound } }
+				};
 			}
 			catch (Exception ex)
 			{
@@ -105,24 +87,28 @@ namespace ApiApplication.Features.Movies.Services
 				{
 					return moviesResponse;
 				}
-				else
-				{
-					return new responseModel
-					{
-						Success = false,
-						Exceptions = { new moviesApiException { Message = "No movies found for the provided search text.", StatusCode = (int)StatusCode.NotFound } }
-					};
-				}
+
+				return GetResponseModel(false, ErrorMessages.Movies.NoMoviesFoundedForSearchText, (int)StatusCode.NotFound);
 			}
 			catch (Exception ex)
 			{
 				_logger?.LogError(ex.ToString());
-				return new responseModel
-				{
-					Success = false,
-					Exceptions = { new moviesApiException { Message = ex.Message, StatusCode = (int)StatusCode.Internal } }
-				};
+				return GetResponseModel(false, ex.Message, (int)StatusCode.Internal);
 			}
+		}
+
+		private responseModel GetResponseModel(bool isSuccess, string errorMessage, int statusCode)
+		{
+			var response = new responseModel
+			{
+				Success = isSuccess,
+				Exceptions = { new moviesApiException
+					{
+						Message = errorMessage,
+						StatusCode = statusCode
+					}}};
+
+			return response;
 		}
 	}
 }

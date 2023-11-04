@@ -19,8 +19,8 @@ namespace ApiApplication.Features.Movies.Services
 		private readonly string _apiKey;
 
 		private const string BasePath = "v1/movies/";
-		private static readonly string ApiKeyConfigurationPath = "Services:ExternalMovies:ApiKey";
-		private static readonly string ApiKeyHeaderName = "X-Apikey";
+		private const string ApiKeyConfigurationPath = "Services:ExternalMovies:ApiKey";
+		private const string ApiKeyHeaderName = "X-Apikey";
 
 		private readonly ICacheService _cacheService;
 
@@ -37,12 +37,12 @@ namespace ApiApplication.Features.Movies.Services
 
 		}
 
-		public async Task<(bool IsSuccess, ExternalMovieDTO Movie, string ErrorMessage)> GetByIdAsync(string movieId)
+		public async Task<(bool IsSuccess, ExternalMovieDto Movie, string ErrorMessage)> GetByIdAsync(string movieId)
 		{
 			var cacheKey = $"Movie_{movieId}";
 
 			// First, try to get the movie data from the cache
-			var cachedMovie = await _cacheService.GetCachedDataAsync<ExternalMovieDTO>(cacheKey);
+			var cachedMovie = await _cacheService.GetCachedDataAsync<ExternalMovieDto>(cacheKey);
 
 			if (cachedMovie != null)
 			{
@@ -63,7 +63,7 @@ namespace ApiApplication.Features.Movies.Services
 					{
 						PropertyNameCaseInsensitive = true
 					};
-					var result = JsonSerializer.Deserialize<ExternalMovieDTO>(content, options);
+					var result = JsonSerializer.Deserialize<ExternalMovieDto>(content, options);
 
 					// Cache the fetched movie data
 					await _cacheService.SetCacheDataAsync(cacheKey, result, TimeSpan.FromHours(1)); // 1 hour cache time
@@ -80,12 +80,12 @@ namespace ApiApplication.Features.Movies.Services
 			}
 		}
 
-		public async Task<(bool IsSuccess, ExternalMovieListDTO Movies, string ErrorMessage)> GetAllAsync()
+		public async Task<(bool IsSuccess, ExternalMovieListDto Movies, string ErrorMessage)> GetAllAsync()
 		{
-			var cacheKey = "AllMovies";
+			const string cacheKey = "AllMovies";
 
 			// First, try to get the movie data from the cache
-			var cachedMovies = await _cacheService.GetCachedDataAsync<ExternalMovieListDTO>(cacheKey);
+			var cachedMovies = await _cacheService.GetCachedDataAsync<ExternalMovieListDto>(cacheKey);
 
 			if (cachedMovies != null && cachedMovies.Movies.Any())
 			{
@@ -106,7 +106,7 @@ namespace ApiApplication.Features.Movies.Services
 					{
 						PropertyNameCaseInsensitive = true
 					};
-					var result = JsonSerializer.Deserialize<ExternalMovieListDTO>(content, options);
+					var result = JsonSerializer.Deserialize<ExternalMovieListDto>(content, options);
 
 					// Cache the fetched movie data
 					await _cacheService.SetCacheDataAsync(cacheKey, result, TimeSpan.FromHours(1)); // 1 hour cache time

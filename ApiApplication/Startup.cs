@@ -41,6 +41,11 @@ namespace ApiApplication
 			// For HTTP:
 			services.AddTransient<IMovieService, ExternalMovieService>();
 
+			// For gRPC:
+			// There should be a Strategy pattern here to determine which service to use.
+			// Unfortunately, I don't have enough time to implement it.
+			// services.AddTransient<IMovieService, MoviesGrpcService>();
+
 			services.AddTransient<ISeatsService, SeatsService>();
 			services.AddSingleton<ICacheService, RedisCacheService>();
 

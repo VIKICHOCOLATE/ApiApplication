@@ -7,7 +7,7 @@ namespace ApiApplication.Shared.Interfaces
 {
     public interface IShowtimesService
     {
-        Task<(bool IsSuccess, ShowtimeDTO ShowTime, string ErrorMessage)> CreateShowtimeWithMovieAsync(ShowtimeEntity showtimeEntity, 
+        Task<(bool IsSuccess, ShowtimeDto ShowTime, string ErrorMessage)> CreateShowtimeWithMovieAsync(ShowtimeEntity showtimeEntity, 
 			CancellationToken cancellationToken = default);
     }
 }
