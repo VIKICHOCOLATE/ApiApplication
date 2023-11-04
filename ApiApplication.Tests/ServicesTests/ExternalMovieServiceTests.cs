@@ -79,8 +79,8 @@ public class ExternalMovieServiceTests
 		{
 			Movies = new List<ExternalMovieDto>()
 			{
-				new ExternalMovieDto { Id = "123", Title = "Test Movie 1" },
-				new ExternalMovieDto { Id = "456", Title = "Test Movie 2" },
+				new() { Id = "123", Title = "Test Movie 1" },
+				new() { Id = "456", Title = "Test Movie 2" },
 			}
 		};
 
