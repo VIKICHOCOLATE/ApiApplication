@@ -1,13 +1,4 @@
 ## Movies challenge
-Welcome to the tech challenge for Lodgify’s Backend developers candidates.
-
----
-
-Please follow the instructions included here when you finish zip it, use a cloud service to upload it and send the link to us by **email**.
-(Remeber to set the zip file permission to **Read-only to anyone**, we suggest Google Drive, but Dropbox, OneDrive, etc is also ok.)
-
-Thank you and good luck!
-
 ---
 
 ## Context
